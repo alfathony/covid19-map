@@ -190,17 +190,14 @@ function switchMap(val) {
 switchMap("subang");
 
 // share
-
 const shareButton = document.querySelector(".share-button");
-const shareDialog = document.querySelector(".share-dialog");
-const closeButton = document.querySelector(".close-button");
 
 shareButton.addEventListener("click", event => {
   if (navigator.share) {
     navigator
       .share({
-        title: "WebShare API Demo",
-        url: "https://codepen.io/ayoisaiah/pen/YbNazJ"
+        title: "Covid19 Subang, Jawa Barat",
+        url: "https://covid19.alfathony.com"
       })
       .then(() => {
         console.log("Thanks for sharing!");
@@ -209,8 +206,4 @@ shareButton.addEventListener("click", event => {
   } else {
     shareDialog.classList.add("is-open");
   }
-});
-
-closeButton.addEventListener("click", event => {
-  shareDialog.classList.remove("is-open");
 });
