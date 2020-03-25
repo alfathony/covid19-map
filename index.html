@@ -4,6 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Covid19 Subang, Jawa Barat</title>
+
+    <!-- Startup configuration -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Fallback application metadata for legacy browsers -->
+    <meta name="application-name" content="Racer3K" />
+    <link rel="icon" sizes="16x16 32x32 48x48" href="lo_def.ico" />
+    <link rel="icon" sizes="512x512" href="hi_def.png" />
+
     <meta
       name="description"
       content="Peta sebaran Covid19 di Kabupaten Subang dan Jawa Barat"
@@ -42,36 +51,48 @@
   <body>
     <section id="sheet">
       <div class="handle flex item-center"><span></span></div>
-      <h1 class="text-lg font-bold">Covid19 Kab.Subang</h1>
+      <h1 class="text-lg font-bold">Covid19 <span id="titleMap"></span></h1>
       <p class="text-sm text-gray-500">
         Diperbaharui pada <span id="update"></span>
       </p>
 
-      <table class="table-auto">
+      <table class="table-auto w-full">
         <tbody>
           <tr>
-            <td class="border px-4 py-2">Total Kasus</td>
-            <td class="border px-4 py-2"><span id="kasus">-</span></td>
+            <td class="border-b py-2">Total Kasus</td>
+            <td class="border-b py-2 text-right">
+              <span id="kasus" class="font-bold">-</span>
+            </td>
           </tr>
           <tr>
-            <td class="border px-4 py-2">Orang Dalam Pemantauan</td>
-            <td class="border px-4 py-2"><span id="odp">-</span></td>
+            <td class="border-b py-2">Orang Dalam Pemantauan</td>
+            <td class="border-b py-2 text-right">
+              <span id="odp">-</span>
+            </td>
           </tr>
           <tr>
-            <td class="border px-4 py-2">Pasien Dalam Pengawasan</td>
-            <td class="border px-4 py-2"><span id="pdp">-</span></td>
+            <td class="border-b py-2">Pasien Dalam Pengawasan</td>
+            <td class="border-b py-2 text-right">
+              <span id="pdp">-</span>
+            </td>
           </tr>
           <tr>
-            <td class="border px-4 py-2">Positif Covid19</td>
-            <td class="border px-4 py-2"><span id="positif">-</span></td>
+            <td class="border-b py-2">Positif Covid19</td>
+            <td class="border-b py-2 text-right">
+              <span id="positif">-</span>
+            </td>
           </tr>
           <tr>
-            <td class="border px-4 py-2">Sembuh</td>
-            <td class="border px-4 py-2"><span id="sembuh">-</span></td>
+            <td class="border-b py-2">Sembuh</td>
+            <td class="border-b py-2 text-right">
+              <span id="sembuh">-</span>
+            </td>
           </tr>
           <tr>
-            <td class="border px-4 py-2">Meninggal</td>
-            <td class="border px-4 py-2"><span id="meninggal">-</span></td>
+            <td class="border-b py-2">Meninggal</td>
+            <td class="border-b py-2 text-right">
+              <span id="meninggal">-</span>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -95,6 +116,12 @@
           >
           untuk data yang lebih akurat.
         </p>
+
+        <a
+          href=""
+          class="share-button block rounded text-center px-4 py-2 text-pink-600 font-bold border"
+          >BAGIKAN</a
+        >
       </div>
     </section>
 
@@ -103,16 +130,19 @@
         <ul class="flex">
           <li class="flex-1 mr-2">
             <a
-              class="text-center block border border-pink-500 rounded py-2 px-4 bg-pink-500 hover:bg-pink-700 text-white"
+              class="text-center block rounded py-2 px-4 text-teal-500"
               href="#"
+              onclick="switchMap('subang')"
+              id="subang"
               >SUBANG</a
             >
           </li>
           <li class="flex-1 mr-2">
             <a
-              class="text-center block border border-white rounded hover:border-teal-200 text-teal-500 hover:bg-gray-200 py-2 px-4"
-              href="https://pikobar.jabarprov.go.id/#/"
-              target="_blank"
+              class="text-center block rounded py-2 px-4 text-teal-500"
+              href="#"
+              onclick="switchMap('jabar')"
+              id="jabar"
               >JABAR</a
             >
           </li>

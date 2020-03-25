@@ -13,9 +13,90 @@ var getJSON = function(url, callback) {
   xhr.send();
 };
 
-function filterByKota() {
-  return null;
-}
+var getMarkers = function(city) {
+  getJSON(
+    "https://covid19-public.digitalservice.id/analytics/longlat/",
+    function(err, data) {
+      if (err !== null) {
+        alert("Something went wrong: " + err);
+      } else {
+        // last update
+        document.getElementById("update").innerHTML = data.last_update;
+
+        var datas = data.data;
+
+        //filter
+        if (city == "subang") {
+          var filteredData = datas.filter(function(city) {
+            return city.kabkot_str == "Kabupaten Subang";
+          });
+        } else {
+          var filteredData = datas; // jabar
+        }
+
+        var odp = filteredData.filter(function(value) {
+          return value.status == "ODP";
+        });
+
+        var pdp = filteredData.filter(function(value) {
+          return value.status == "PDP";
+        });
+
+        var positif = filteredData.filter(function(value) {
+          return value.status == "Positif";
+        });
+
+        var sembuh = filteredData.filter(function(value) {
+          return value.status == "Positif" && value.stage == "Sembuh";
+        });
+
+        var meninggal = filteredData.filter(function(value) {
+          return value.status == "Positif" && value.stage == "Meninggal";
+        });
+
+        document.getElementById("kasus").innerHTML = filteredData.length;
+        document.getElementById("odp").innerHTML = odp.length;
+        document.getElementById("pdp").innerHTML = pdp.length;
+        document.getElementById("positif").innerHTML = positif.length;
+        document.getElementById("sembuh").innerHTML = sembuh.length;
+        document.getElementById("meninggal").innerHTML = meninggal.length;
+
+        for (var i = 0; i < filteredData.length; i++) {
+          if (filteredData[i]["wilayah_status_stage_latitude"] != null) {
+            marker = new L.marker(
+              [
+                filteredData[i]["wilayah_status_stage_latitude"],
+                filteredData[i]["wilayah_status_stage_longitude"]
+              ],
+              {
+                icon: iconFile(
+                  filteredData[i]["status"],
+                  filteredData[i]["stage"]
+                )
+              }
+            )
+              .bindPopup(
+                "<b>" +
+                  status(filteredData[i]["status"], filteredData[i]["stage"]) +
+                  "</b><br>" +
+                  filteredData[i]["jenis_kelamin_str"] +
+                  ", " +
+                  filteredData[i]["umur"] +
+                  " tahun" +
+                  "<br>" +
+                  filteredData[i]["desa_str"] +
+                  ", " +
+                  filteredData[i]["kecamatan_str"] +
+                  ", " +
+                  filteredData[i]["kabkot_str"]
+              )
+              .addTo(mymap);
+          }
+        }
+      }
+    }
+  );
+};
 
 var mymap = L.map("mapid", { scrollWheelZoom: false }).setView(
   [-6.558322, 107.761622],
@@ -88,84 +169,48 @@ function iconFile(value, stage) {
   }
 }
 
-getJSON("https://covid19-public.digitalservice.id/analytics/longlat/", function(
-  err,
-  data
-) {
-  if (err !== null) {
-    alert("Something went wrong: " + err);
+function switchMap(val) {
+  navSubang = document.getElementById("subang");
+  navJabar = document.getElementById("jabar");
+
+  if (val == "subang") {
+    navSubang.classList.add("active");
+    navJabar.classList.remove("active");
   } else {
-    // last update
-    document.getElementById("update").innerHTML = data.last_update;
-
-    var datas = data.data;
-
-    //filter
-    if (filterByKota() == null) {
-      var filteredData = datas;
-    } else {
-      var filteredData = datas.filter(function(city) {
-        return city.kabkot_str == "Kabupaten Subang";
-      });
-    }
-
-    var odp = filteredData.filter(function(value) {
-      return value.status == "ODP";
-    });
-
-    var pdp = filteredData.filter(function(value) {
-      return value.status == "PDP";
-    });
-
-    var positif = filteredData.filter(function(value) {
-      return value.status == "Positif";
-    });
-
-    var sembuh = filteredData.filter(function(value) {
-      return value.status == "Positif" && value.stage == "Sembuh";
-    });
-
-    var meninggal = filteredData.filter(function(value) {
-      return value.status == "Positif" && value.stage == "Meninggal";
-    });
-
-    document.getElementById("kasus").innerHTML = filteredData.length;
-    document.getElementById("odp").innerHTML = odp.length;
-    document.getElementById("pdp").innerHTML = pdp.length;
-    document.getElementById("positif").innerHTML = positif.length;
-    document.getElementById("sembuh").innerHTML = sembuh.length;
-    document.getElementById("meninggal").innerHTML = meninggal.length;
-
-    for (var i = 0; i < filteredData.length; i++) {
-      console.log(filteredData[i]["kabkot_str"]);
-
-      if (filteredData[i]["wilayah_status_stage_latitude"] != null) {
-        marker = new L.marker(
-          [
-            filteredData[i]["wilayah_status_stage_latitude"],
-            filteredData[i]["wilayah_status_stage_longitude"]
-          ],
-          {
-            icon: iconFile(filteredData[i]["status"], filteredData[i]["stage"])
-          }
-        )
-          .bindPopup(
-            "<b>" +
-              status(filteredData[i]["status"], filteredData[i]["stage"]) +
-              "</b><br>" +
-              filteredData[i]["jenis_kelamin_str"] +
-              ", " +
-              filteredData[i]["umur"] +
-              " tahun" +
-              "<br>" +
-              filteredData[i]["desa_str"] +
-              ", " +
-              filteredData[i]["kecamatan_str"] +
-              ", " +
-              filteredData[i]["kabkot_str"]
-          )
-          .addTo(mymap);
-      }
-    }
+    navSubang.classList.remove("active");
+    navJabar.classList.add("active");
   }
+
+  console.log(val);
+  title = val == "subang" ? "Kabupaten Subang" : "Jawa Barat";
+  document.getElementById("titleMap").innerHTML = title;
+  getMarkers(val);
+}
+
+switchMap("subang");
+
+// share
+
+const shareButton = document.querySelector(".share-button");
+const shareDialog = document.querySelector(".share-dialog");
+const closeButton = document.querySelector(".close-button");
+
+shareButton.addEventListener("click", event => {
+  if (navigator.share) {
+    navigator
+      .share({
+        title: "WebShare API Demo",
+        url: "https://codepen.io/ayoisaiah/pen/YbNazJ"
+      })
+      .then(() => {
+        console.log("Thanks for sharing!");
+      })
+      .catch(console.error);
+  } else {
+    shareDialog.classList.add("is-open");
+  }
+});
+
+closeButton.addEventListener("click", event => {
+  shareDialog.classList.remove("is-open");
 });

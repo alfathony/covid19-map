@@ -43,3 +43,8 @@ p {
   border-radius: 40px;
   background-color: #eeeeee;
 }
+
+.active {
+  background-color: #d53f8c;
+  color: white;
+}
