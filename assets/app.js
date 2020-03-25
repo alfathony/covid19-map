@@ -1,13 +1,3 @@
-var mymap = L.map("mapid", { scrollWheelZoom: false }).setView(
-  [-6.558322, 107.761622],
-  12
-);
-
-L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
-  attribution:
-    '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(mymap);
-
 var getJSON = function(url, callback) {
   var xhr = new XMLHttpRequest();
   xhr.open("GET", url, true);
@@ -23,11 +13,25 @@ var getJSON = function(url, callback) {
   xhr.send();
 };
 
+function filterByKota() {
+  return null;
+}
+
+var mymap = L.map("mapid", { scrollWheelZoom: false }).setView(
+  [-6.558322, 107.761622],
+  10
+);
+
+L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
+  attribution:
+    '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(mymap);
+
 function status(value, stage) {
   if (value == "ODP") {
     return "Orang Dalam Pemantauan";
   } else if (value == "PDP") {
-    return "Pasien Dalam Pemantauan";
+    return "Pasien Dalam Pengawasan";
   } else if (value == "Positif") {
     if (stage == "Sembuh") {
       return "Positif (Sembuh)";
@@ -91,35 +95,74 @@ getJSON("https://covid19-public.digitalservice.id/analytics/longlat/", function(
   if (err !== null) {
     alert("Something went wrong: " + err);
   } else {
-    // alert("Your query count: " + data.data.length);
-
+    // last update
     document.getElementById("update").innerHTML = data.last_update;
 
-    for (var i = 0; i < data.data.length; i++) {
-      if (data.data[i]["wilayah_status_stage_latitude"] != null) {
+    var datas = data.data;
+
+    //filter
+    if (filterByKota() == null) {
+      var filteredData = datas;
+    } else {
+      var filteredData = datas.filter(function(city) {
+        return city.kabkot_str == "Kabupaten Subang";
+      });
+    }
+
+    var odp = filteredData.filter(function(value) {
+      return value.status == "ODP";
+    });
+
+    var pdp = filteredData.filter(function(value) {
+      return value.status == "PDP";
+    });
+
+    var positif = filteredData.filter(function(value) {
+      return value.status == "Positif";
+    });
+
+    var sembuh = filteredData.filter(function(value) {
+      return value.status == "Positif" && value.stage == "Sembuh";
+    });
+
+    var meninggal = filteredData.filter(function(value) {
+      return value.status == "Positif" && value.stage == "Meninggal";
+    });
+
+    document.getElementById("kasus").innerHTML = filteredData.length;
+    document.getElementById("odp").innerHTML = odp.length;
+    document.getElementById("pdp").innerHTML = pdp.length;
+    document.getElementById("positif").innerHTML = positif.length;
+    document.getElementById("sembuh").innerHTML = sembuh.length;
+    document.getElementById("meninggal").innerHTML = meninggal.length;
+
+    for (var i = 0; i < filteredData.length; i++) {
+      console.log(filteredData[i]["kabkot_str"]);
+
+      if (filteredData[i]["wilayah_status_stage_latitude"] != null) {
         marker = new L.marker(
           [
-            data.data[i]["wilayah_status_stage_latitude"],
-            data.data[i]["wilayah_status_stage_longitude"]
+            filteredData[i]["wilayah_status_stage_latitude"],
+            filteredData[i]["wilayah_status_stage_longitude"]
           ],
           {
-            icon: iconFile(data.data[i]["status"], data.data[i]["stage"])
+            icon: iconFile(filteredData[i]["status"], filteredData[i]["stage"])
           }
         )
           .bindPopup(
             "<b>" +
-              status(data.data[i]["status"], data.data[i]["stage"]) +
+              status(filteredData[i]["status"], filteredData[i]["stage"]) +
               "</b><br>" +
-              data.data[i]["jenis_kelamin_str"] +
+              filteredData[i]["jenis_kelamin_str"] +
               ", " +
-              data.data[i]["umur"] +
+              filteredData[i]["umur"] +
               " tahun" +
               "<br>" +
-              data.data[i]["desa_str"] +
+              filteredData[i]["desa_str"] +
               ", " +
-              data.data[i]["kecamatan_str"] +
+              filteredData[i]["kecamatan_str"] +
               ", " +
-              data.data[i]["kabkot_str"]
+              filteredData[i]["kabkot_str"]
           )
           .addTo(mymap);
       }

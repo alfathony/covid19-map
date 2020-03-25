@@ -3,7 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Covid19 Jawa Barat</title>
+    <title>Covid19 Subang, Jawa Barat</title>
+    <meta
+      name="description"
+      content="Peta sebaran Covid19 di Kabupaten Subang dan Jawa Barat"
+    />
     <link
       href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
       rel="stylesheet"
@@ -20,16 +24,59 @@
       crossorigin=""
     ></script>
     <link rel="stylesheet" href="assets/style.css" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-97476047-2"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "UA-97476047-2");
+    </script>
   </head>
   <body>
     <section id="sheet">
       <div class="handle flex item-center"><span></span></div>
-      <h1 class="text-lg font-bold">Tracking Covid19 Kab. Subang</h1>
+      <h1 class="text-lg font-bold">Covid19 Kab.Subang</h1>
       <p class="text-sm text-gray-500">
         Diperbaharui pada <span id="update"></span>
       </p>
 
-      <div class="mt-4">
+      <table class="table-auto">
+        <tbody>
+          <tr>
+            <td class="border px-4 py-2">Total Kasus</td>
+            <td class="border px-4 py-2"><span id="kasus">-</span></td>
+          </tr>
+          <tr>
+            <td class="border px-4 py-2">Orang Dalam Pemantauan</td>
+            <td class="border px-4 py-2"><span id="odp">-</span></td>
+          </tr>
+          <tr>
+            <td class="border px-4 py-2">Pasien Dalam Pengawasan</td>
+            <td class="border px-4 py-2"><span id="pdp">-</span></td>
+          </tr>
+          <tr>
+            <td class="border px-4 py-2">Positif Covid19</td>
+            <td class="border px-4 py-2"><span id="positif">-</span></td>
+          </tr>
+          <tr>
+            <td class="border px-4 py-2">Sembuh</td>
+            <td class="border px-4 py-2"><span id="sembuh">-</span></td>
+          </tr>
+          <tr>
+            <td class="border px-4 py-2">Meninggal</td>
+            <td class="border px-4 py-2"><span id="meninggal">-</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="mt-4 text-sm">
         <p>
           Data diperoleh dari Public
           <a
@@ -51,7 +98,28 @@
       </div>
     </section>
 
-    <div id="mapid"></div>
+    <div id="maparea">
+      <div class="z-10 p-2 shadow">
+        <ul class="flex">
+          <li class="flex-1 mr-2">
+            <a
+              class="text-center block border border-pink-500 rounded py-2 px-4 bg-pink-500 hover:bg-pink-700 text-white"
+              href="#"
+              >SUBANG</a
+            >
+          </li>
+          <li class="flex-1 mr-2">
+            <a
+              class="text-center block border border-white rounded hover:border-teal-200 text-teal-500 hover:bg-gray-200 py-2 px-4"
+              href="https://pikobar.jabarprov.go.id/#/"
+              target="_blank"
+              >JABAR</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div id="mapid"></div>
+    </div>
 
     <script src="assets/app.js"></script>
   </body>
