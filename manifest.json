@@ -7,7 +7,7 @@
   "display": "fullscreen",
   "orientation": "portrait",
   "Scope": "/",
-  "start_url": "/",
+  "start_url": "/?utm_source=launcher",
   "icons": [
     {
       "src": "assets/icons/icon-72x72.png",
